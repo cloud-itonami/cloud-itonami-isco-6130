@@ -1,0 +1,33 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a field-and-barn robot performs crop tending,
+;; feed distribution and livestock-health monitoring for mixed crop and animal
+;; producers (ISCO 6130). Its physical work here: driving a feed cart from the
+;; feed store to the barn, and checking the pump head needed to push stock
+;; water up the paddock line to the troughs.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-6130"
+ :cases
+ [{:id :feed-cart-store-to-barn
+   :kind :transport
+   :procedure "field-and-barn robot drives a loaded feed cart 120 m from the feed store to the barn"
+   :params {:mass-kg 200.0 :distance-m 120.0 :v-max-mps 0.9 :a-max-mps2 0.3
+            :brake-decel-mps2 0.5 :drive-force-n 450.0 :crr 0.04
+            :cog-height-m 0.60 :support-half-length-m 0.45}
+   :sweep {:param :payload-kg :values [50.0 100.0 200.0 350.0 500.0]}
+   :quantity :cycle-time-s
+   :limit {:max 200.0 :basis "estimate: a feed round of 4-5 cart trips must finish within the 15-minute morning feeding window"}
+   :boundary {:lo 10.0 :hi 1000.0}}
+  {:id :stock-water-line-head
+   :kind :pipe-flow
+   :procedure "livestock-health monitoring: pump head needed to push stock water 150 m up a 25 mm polyethylene line to the paddock troughs (5 m rise)"
+   :params {:diameter-m 0.025 :length-m 150.0 :roughness-m 7.0e-6
+            :density-kg-m3 998.0 :viscosity-pa-s 1.0e-3 :pump-efficiency 0.5 :elevation-m 5.0}
+   :sweep {:param :q-m3s :values [0.0002 0.0004 0.0006 0.0008 0.001 0.0013]}
+   :quantity :head-m
+   :limit {:max 30.0 :basis "estimate: a small farm pressure pump delivers about 3 bar (~30 m head)"}
+   :boundary {:lo 0.0001 :hi 0.003}}]}
