@@ -50,7 +50,7 @@ See [`docs/business-model.md`](docs/business-model.md) and
 
 Unlike earlier `cloud-itonami-isco-*` reference actors (a standalone
 `Store` + pure `assess` governor function), this repository implements
-the **full itonami Actor pattern** from CLAUDE.md's Actors section: a
+the **full itonami Actor pattern** from AGENTS.md's Actors section: a
 real [`kotoba-lang/langgraph`](https://github.com/kotoba-lang/langgraph)
 `StateGraph`, with the Advisor and Governor as distinct graph nodes and
 human-in-the-loop interrupt/resume via checkpointing.
